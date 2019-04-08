@@ -2,6 +2,19 @@ import pandas as pd
 
 def get_errs(high, low):
     """
+    ????.
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+
+
+    Example
+    -------
+
     """
     #Data Frame Columns
     amu       =  'mass amu'
