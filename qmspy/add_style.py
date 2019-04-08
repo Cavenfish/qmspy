@@ -1,4 +1,3 @@
-import pandas as pd
 from itertools import cycle
 
 def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
@@ -34,15 +33,6 @@ def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     >>>
     >>> df = qp.add_style(data)
     """
-    #Data Frame Columns
-    amu       =  'mass amu'
-    sem       =  'SEM Amps'
-    ev        =  'electron-energy V'
-    cyc       =  'Cycle'
-    col       =  'Color'
-    mar       =  'Marker'
-    std       =  'Standard Deviation'
-
     #Check is data is in CSV format
     if '.csv' in data:
         df = pd.read_csv(data)
