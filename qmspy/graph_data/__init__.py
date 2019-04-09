@@ -4,10 +4,13 @@ data plotting functions.
 
 Contains the following functions:
                 line
+                line3d
                 bar
+                barx3d
                 scatter
-                dddbar
-                dddline
+                scatter3d
+                contour
+
 
 
 Author: Brian C. Ferrari
