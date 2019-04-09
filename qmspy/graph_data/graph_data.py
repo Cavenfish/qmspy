@@ -1,8 +1,3 @@
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.colors import LogNorm
-import matplotlib.pyplot as plt
-import seaborn as sb
-
 
 def line(data, size, ls):
     """
