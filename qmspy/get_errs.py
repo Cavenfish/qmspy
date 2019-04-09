@@ -1,4 +1,3 @@
-import pandas as pd
 
 def get_errs(datafile, header):
     """
