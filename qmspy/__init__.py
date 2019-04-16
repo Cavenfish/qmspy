@@ -17,11 +17,12 @@ from itertools import cycle
 import numpy as np
 import pandas as pd
 
-from .add_style  import add_style
-from .get_errs   import get_errs
-from .init_data  import init_data
-from .integrate  import integrate
-from .graph_data import *
+from .add_style         import add_style
+from .get_errs          import get_errs
+from .init_data         import init_data
+from .integrate         import integrate
+from .appearance_energy import appearance_energy
+from .graph_data        import *
 
 
 #Error Header and Tail
