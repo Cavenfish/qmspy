@@ -13,8 +13,20 @@ Contains the following submodules:
 
 Author: Brian C. Ferrari
 """
+from itertools import cycle
 import numpy as np
 import pandas as pd
+
+from .add_style  import add_style
+from .get_errs   import get_errs
+from .init_data  import init_data
+from .integrate  import integrate
+from .graph_data import *
+
+
+#Error Header and Tail
+error_head = "\n*****uh oh spaghettios*****\n"
+error_tail = "\n*****Ponder this, then return to me*****\n"
 
 #Data Frame Columns
 amu       =  'mass amu'
