@@ -32,7 +32,7 @@ def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     >>>
     >>> df = qp.add_style(data)
     """
-    #Check is data is in CSV format
+    #Check if data is in CSV format
     if '.csv' in data:
         df = pd.read_csv(data)
 
