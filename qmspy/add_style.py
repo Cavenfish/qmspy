@@ -1,4 +1,3 @@
-from itertools import cycle
 
 def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     """
@@ -39,9 +38,9 @@ def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
 
     #Terminates function with error message if data format not acceptable
     elif type(data) is not type(pd.DataFrame()):
-        print("\n*****uh oh spaghettios*****\n")
+        print(error_head)
         print("Your data is not in CSV or Pandas DataFrame Format")
-        print("\n*****Ponder this, then return to me*****\n")
+        print(error_tail)
         return
 
     #If data already DataFrame format, changes its name to df
