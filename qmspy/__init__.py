@@ -18,7 +18,7 @@ from .config            import *
 from .add_style         import add_style
 from .get_errs          import get_errs
 from .init_data         import init_data
-from .integrate         import integrate
+from .fit_gaussians     import fit_gaussians
 from .appearance_energy import appearance_energy
 
 from .graph_data        import *
