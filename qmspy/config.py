@@ -34,3 +34,6 @@ def check_data_type(data):
         df = data
 
     return df
+
+def gaussian(x, a, x0, sigma):
+    return a * np.exp( -(x - x0)**2 / (2 * sigma**2)  )
