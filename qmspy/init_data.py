@@ -1,5 +1,4 @@
-import pandas as pd
-import numpy as np
+from .config import *
 
 def init_data(filled, background, error, savename='./Data.csv', sub=False):
     """
@@ -37,13 +36,6 @@ def init_data(filled, background, error, savename='./Data.csv', sub=False):
     >>> data = qp.init_data(filled, background, error)
     >>>
     """
-    #Data Frame Columns
-    amu       =  'mass amu'
-    sem       =  'SEM Amps'
-    ev        =  'electron-energy V'
-    cyc       =  'Cycle'
-    std       =  'Standard Deviation'
-
     #Read in CSV files with Pandas
     data = pd.read_csv(filled,     header=22)
     back = pd.read_csv(background, header=22)
