@@ -1,3 +1,4 @@
+from .config import *
 
 def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     """
@@ -32,20 +33,7 @@ def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     >>>
     >>> df = qp.add_style(data)
     """
-    #Check if data is in CSV format
-    if '.csv' in data:
-        df = pd.read_csv(data)
-
-    #Terminates function with error message if data format not acceptable
-    elif type(data) is not type(pd.DataFrame()):
-        print(error_head)
-        print("Your data is not in CSV or Pandas DataFrame Format")
-        print(error_tail)
-        return
-
-    #If data already DataFrame format, changes its name to df
-    else:
-        df = data
+    df = check_data_type(data)
 
     #If no color list given generate a default one
     if clist is None:
