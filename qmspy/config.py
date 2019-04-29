@@ -15,6 +15,8 @@ cyc       =  'Cycle'
 col       =  'Color'
 mar       =  'Marker'
 std       =  'Standard Deviation'
+pks       =  'Peaks'
+gau       =  'Gaussian Fits'
 
 
 def check_data_type(data):
