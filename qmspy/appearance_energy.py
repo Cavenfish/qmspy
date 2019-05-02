@@ -1,18 +1,16 @@
 from .config import *
+from scipy.optimize import curve_fit
 
-def appearance_energy(data, threshold):
+def appearance_energy(data):
     """
     This function finds the appearance energy of all amu species present in
-    the data.
+    the data by means of linear fit.
 
     Parameters
     ----------
     data: string or Pandas DataFrame
         This should be a string that points to the csv DataFrame file
         or a Pandas DataFrame. (FULL DIRECTORY STRING REQUIRED)
-    threshold: numpy float
-        This should be the value used as the threshold for determining the
-        appearance energies.
 
     Returns
     -------
@@ -28,5 +26,7 @@ def appearance_energy(data, threshold):
     df = check_data_type(data)
 
     for specie in df.groupby(amu):
-        temp = specie.where(sem > threshold)
-        temp.min()
+        if specie[pks] is 0:
+            continue
+
+    #still am not quite sure how to do this lol sucks to suck
