@@ -1,6 +1,7 @@
 from .config import *
 
-def init_data(filled, background, error, savename='./Data.csv', sub=False):
+def init_data(filled, background, savename='./Data.csv', sub=False,
+              abs=False, drop=True):
     """
     This function reads in the QMS csv files and forms pandas DataFrames,
     it also preps the data.
@@ -13,12 +14,18 @@ def init_data(filled, background, error, savename='./Data.csv', sub=False):
     background: string
         This should be a string that points to the csv file of a
         empty chamber esweep. (FULL DIRECTORY STRING REQUIRED)
-    error: Pandas DataFrame
-        This should be the output of the `get_errs()` function within
-        `qmspy` module.
     savename: string [Optional, Default = './Data.csv']
         This should be a directory string that will be used to write
         the DataFrame csv to. (FULL DIRECTORY STRING REQUIRED)
+    sub: True/False     Default==False
+        This indicates if the background should be subtracted from
+        the data.
+    abs: True/False     Default==False
+        This indicates if the negative values in data should be set
+        to zeros
+    drop: True/False    Default==True
+        This indicates if data collected after 1st Cycle should be kept
+
 
     Returns
     -------
@@ -41,8 +48,7 @@ def init_data(filled, background, error, savename='./Data.csv', sub=False):
     back = pd.read_csv(background, header=22)
 
     #Get Standard Deviation of data
-    data = pd.read_csv(datafile, header=header)
-    std = hi.groupby([ev, amu]).std()
+    error = data.groupby([ev, amu]).std()
 
     #Add in Standard Deviation Column
     error     = error.rename(index=str, columns={sem:std})
@@ -50,20 +56,23 @@ def init_data(filled, background, error, savename='./Data.csv', sub=False):
     data[std] = error[std]
 
     #Removes negative values from data and background
-    data.update( data[sem].clip(0) )
-    back.update( back[sem].clip(0) )
+    if abs is True:
+        data.update( data[sem].clip(0) )
+        back.update( back[sem].clip(0) )
 
     #Drops data outside of first cycle
-    data = data.loc[data[cyc] == 1]
-    back = back.loc[back[cyc] == 1]
+    if drop is True:
+        data = data.loc[data[cyc] == 1]
+        back = back.loc[back[cyc] == 1]
 
     #subtract background from data
     if sub is True:
         data[sem] -= back[sem]
 
     #Removes negative values from data and background again
-    data.update( data[sem].clip(0) )
-    back.update( back[sem].clip(0) )
+    if abs is True:
+        data.update( data[sem].clip(0) )
+        back.update( back[sem].clip(0) )
 
     #Make all 0s np.nan (prevents them from being plotted)
     data = data.replace(0, np.nan)
