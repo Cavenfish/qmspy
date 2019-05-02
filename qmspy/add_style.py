@@ -1,4 +1,5 @@
 from .config import *
+from itertools import cycle
 
 def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     """
