@@ -40,6 +40,10 @@ def init_data(filled, background, error, savename='./Data.csv', sub=False):
     data = pd.read_csv(filled,     header=22)
     back = pd.read_csv(background, header=22)
 
+    #Get Standard Deviation of data
+    data = pd.read_csv(datafile, header=header)
+    std = hi.groupby([ev, amu]).std()
+
     #Add in Standard Deviation Column
     error     = error.rename(index=str, columns={sem:std})
     error     = error.reset_index()
