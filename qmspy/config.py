@@ -1,7 +1,6 @@
-from itertools import cycle
+import sys
 import numpy as np
 import pandas as pd
-import sys
 
 #Error Header and Tail
 error_head = "\n*****uh oh spaghettios*****\n"
