@@ -2,7 +2,7 @@ from .config      import *
 from scipy.signal import find_peaks
 from scipy.signal import gaussian
 
-def fit_gaussians(data, peaks):
+def fit_gaussians(data):
     """
     Fits gaussians to the data peaks.
 
@@ -33,10 +33,10 @@ def fit_gaussians(data, peaks):
 
     #interate through peaks
     for peak in peaks:
-        left   = properties['left_ips'][i]  #left point of gaussian
-        right  = properties['right_ips'][i] #right point of gaussian
-        length = int(right - left)          #length of gaussian
-        width  = properties['widths'][i]    #gaussian width
+        left   = int(properties['left_ips'][i] )  #left point of gaussian
+        right  = int(properties['right_ips'][i])  #right point of gaussian
+        length = right - left                     #length of gaussian
+        width  = properties['widths'][i]          #gaussian width
 
         #generate gaussian curve fit to peak data
         gaus   = gaussian(length, width) * properties['peak_heights'][i]
