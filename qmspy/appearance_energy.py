@@ -23,10 +23,21 @@ def appearance_energy(data):
     -------
 
     """
-    df = check_data_type(data)
+    df   = check_data_type(data)
 
-    for specie in df.groupby(amu):
-        if specie[pks] is 0:
-            continue
+    #Grabs only rows with 1 in peaks column
+    temp = df.loc(df[pks] == 1)
 
-    #still am not quite sure how to do this lol sucks to suck
+    #Makes a list of uniques species of interest (species with data peaks)
+    species_of_interest  = temp[amu].unique()
+
+    energies={}
+    for specie in species_of_interest:
+        temp = df.loc(df[amu] == specie)
+
+        fit = np.polyfit(temp[ev], temp[sem], 3)
+
+        enegies[specie] = fit[0]
+
+
+    return energies 
