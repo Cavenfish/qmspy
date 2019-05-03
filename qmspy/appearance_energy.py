@@ -26,18 +26,19 @@ def appearance_energy(data):
     df   = check_data_type(data)
 
     #Grabs only rows with 1 in peaks column
-    temp = df.loc(df[pks] == 1)
+    temp = df.loc[df[pks] == 1]
 
     #Makes a list of uniques species of interest (species with data peaks)
     species_of_interest  = temp[amu].unique()
 
     energies={}
     for specie in species_of_interest:
-        temp = df.loc(df[amu] == specie)
+        temp = df.loc[df[amu] == specie]
 
-        fit = np.polyfit(temp[ev], temp[sem], 3)
+        z = np.polyfit(temp[sem], temp[ev], 3)
+        f = np.poly1d(z)
 
-        enegies[specie] = fit[0]
+        energies[specie] = f(0)
 
 
-    return energies 
+    return energies
