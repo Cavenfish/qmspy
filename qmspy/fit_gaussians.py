@@ -34,14 +34,10 @@ def fit_gaussians(data):
 
     #interate through peaks
     for peak in peaks:
-        left   = int(properties['left_ips'][i] )  #left point of gaussian
-        right  = int(properties['right_ips'][i])  #right point of gaussian
-        length = right - left                     #length of gaussian
-        width  = properties['widths'][i]          #gaussian width
-
-    #Gaussian's are not linning up perfectly with data
-    #Some are shifted by 1, some by 2, some are fine
-    #Need to resolve this issue
+        left   = int(round(properties['left_ips'][i] ) ) #left point of gaussian
+        right  = int(round(properties['right_ips'][i]) ) #right point of gaussian
+        length = right - left                       #length of gaussian
+        width  = properties['widths'][i]            #gaussian width
 
         #generate gaussian curve fit to peak data
         gaus   = gaussian(length, width) * properties['peak_heights'][i]
