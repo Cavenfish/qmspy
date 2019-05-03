@@ -39,6 +39,10 @@ def fit_gaussians(data):
         length = right - left                     #length of gaussian
         width  = properties['widths'][i]          #gaussian width
 
+    #Gaussian's are not linning up perfectly with data
+    #Some are shifted by 1, some by 2, some are fine
+    #Need to resolve this issue
+
         #generate gaussian curve fit to peak data
         gaus   = gaussian(length, width) * properties['peak_heights'][i]
 
