@@ -24,8 +24,9 @@ def fit_gaussians(data):
     peaks, properties = find_peaks(df[sem], height=1e-16, width=5)
 
     #Add peaks column to DataFrame
-    df[pks]            = 0
-    df.loc[peaks][pks] = 1
+    temp        = np.zeros(len(df[sem]))
+    temp[peaks] = 1
+    df[pks]     = temp
 
     #initialize some counter and gao==array for gaussian fit values
     i   = 0
