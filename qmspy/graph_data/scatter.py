@@ -1,7 +1,10 @@
+from ..config import *
 
 def scatter(data, size, hue=False):
     """
     """
+    df = check_data_type(data)
+
     if hue is not False:
         hue = data[col]
     else:
@@ -9,6 +12,6 @@ def scatter(data, size, hue=False):
 
     fig, ax = plt.subplots(figsize=size)
     sizes   = (20, 400)
-    sb.scatterplot(data[ev], data[amu], size=data[sem],
+    sb.scatterplot(df[ev], df[amu], size=df[sem],
                    hue=hue, sizes=sizes, legend=False, ax=ax)
     return fig, ax
