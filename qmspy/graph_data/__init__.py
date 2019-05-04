@@ -15,7 +15,7 @@ Contains the following functions:
 
 Author: Brian C. Ferrari
 """
-from .config    import *
+from ..config   import *
 
 
 from .bar       import bar
