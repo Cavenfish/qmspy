@@ -21,8 +21,8 @@ def init_data(filled, background, savename='./Data.csv', sub=False,
         This indicates if the background should be subtracted from
         the data.
     abs: True/False     Default==False
-        This indicates if the negative values in data should be set
-        to zeros
+        This indicates if the absolute value of the SEM Amps data
+        should be taken
     drop: True/False    Default==True
         This indicates if data collected after 1st Cycle should be kept
 
@@ -57,8 +57,8 @@ def init_data(filled, background, savename='./Data.csv', sub=False,
 
     #Removes negative values from data and background
     if abs is True:
-        data.update( data[sem].clip(0) )
-        back.update( back[sem].clip(0) )
+        data.update( data[sem].abs() )
+        back.update( back[sem].abs() )
 
     #Drops data outside of first cycle
     if drop is True:
@@ -68,11 +68,6 @@ def init_data(filled, background, savename='./Data.csv', sub=False,
     #subtract background from data
     if sub is True:
         data[sem] -= back[sem]
-
-    #Removes negative values from data and background again
-    if abs is True:
-        data.update( data[sem].clip(0) )
-        back.update( back[sem].clip(0) )
 
     #Make all 0s np.nan (prevents them from being plotted)
     data = data.replace(0, np.nan)
