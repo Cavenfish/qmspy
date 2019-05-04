@@ -1,6 +1,10 @@
 import sys
 import numpy as np
 import pandas as pd
+import seaborn as sb
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.colors import LogNorm
+import matplotlib.pyplot as plt
 
 #Error Header and Tail
 error_head = "\n*****uh oh spaghettios*****\n"
