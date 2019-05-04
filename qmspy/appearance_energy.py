@@ -31,6 +31,7 @@ def appearance_energy(data):
     #Makes a list of uniques species of interest (species with data peaks)
     species_of_interest  = temp[amu].unique()
 
+
     energies={}
     for specie in species_of_interest:
         temp = df.loc[df[amu] == specie]
