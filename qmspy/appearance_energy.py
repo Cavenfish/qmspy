@@ -36,10 +36,13 @@ def appearance_energy(data):
     for specie in species_of_interest:
         temp = df.loc[df[amu] == specie]
 
-        z = np.polyfit(temp[sem], temp[ev], 3)
+        z = np.polyfit(temp[ev], temp[sem], 6)
         f = np.poly1d(z)
 
-        energies[specie] = f(0)
+        x = np.arange(8,20)
+
+
+        energies[specie] = #still need to figure out how to grab the x-intercept
 
 
     return energies
