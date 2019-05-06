@@ -41,8 +41,7 @@ def appearance_energy(data):
 
         x = np.arange(8,20)
 
-
-        energies[specie] = #still need to figure out how to grab the x-intercept
+        energies[specie] = np.interp(0, f(x), x)
 
 
     return energies
