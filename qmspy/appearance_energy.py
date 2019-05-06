@@ -31,17 +31,24 @@ def appearance_energy(data):
     #Makes a list of uniques species of interest (species with data peaks)
     species_of_interest  = temp[amu].unique()
 
-
+    #initialize a dictionary for appearance energies
     energies={}
+
+    #iterate through each species of interest
     for specie in species_of_interest:
+
+        #slice the DataFrame so that it only has rows with amu value
+        #equal to the specie of interest
         temp = df.loc[df[amu] == specie]
 
+        #Perform a polynomial fitting to the entire data-set
         z = np.polyfit(temp[ev], temp[sem], 6)
-        f = np.poly1d(z)
+        f = np.poly1d(z) #this is the fitting function
 
+        #x-range to later interpolate the x-intercept
         x = np.arange(8,20)
 
+        #interpolate the x-intercept and add it to the dictionary
         energies[specie] = np.interp(0, f(x), x)
-
 
     return energies
