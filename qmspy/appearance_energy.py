@@ -25,17 +25,14 @@ def appearance_energy(data):
     """
     df   = check_data_type(data)
 
-    #Grabs only rows with 1 in peaks column
-    temp = df.loc[df[pks] == 1]
-
-    #Makes a list of uniques species of interest (species with data peaks)
-    species_of_interest  = temp[amu].unique()
+    #Grab species of interest
+    soi = species_of_interest(df)
 
     #initialize a dictionary for appearance energies
     energies={}
 
     #iterate through each species of interest
-    for specie in species_of_interest:
+    for specie in soi:
 
         #slice the DataFrame so that it only has rows with amu value
         #equal to the specie of interest
