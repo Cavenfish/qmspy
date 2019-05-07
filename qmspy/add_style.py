@@ -1,7 +1,7 @@
 from .config import *
 from itertools import cycle
 
-def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
+def add_style(data, savename='./Data-with-Style.csv', clist=None, mlist=None):
     """
     This function adds a color and marker column to a Pandas DataFrame,
     then saves it as csv file.
@@ -34,7 +34,9 @@ def add_style(data, savename='./Data_with_Style.csv', clist=None, mlist=None):
     >>>
     >>> df = qp.add_style(data)
     """
-    df = check_data_type(data)
+    df  = check_data_type(data)
+
+    soi = species_of_interest(df)
 
     #If no color list given generate a default one
     if clist is None:
