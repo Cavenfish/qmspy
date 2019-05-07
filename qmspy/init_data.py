@@ -1,6 +1,6 @@
 from .config import *
 
-def init_data(filled, background, savename='./Data.csv', sub=False,
+def init_data(filled, background, data_type, savename='./Data.csv', sub=False,
               abs=False, drop=True):
     """
     This function reads in the QMS csv files and forms pandas DataFrames,
@@ -14,6 +14,10 @@ def init_data(filled, background, savename='./Data.csv', sub=False,
     background: string
         This should be a string that points to the csv file of a
         empty chamber esweep. (FULL DIRECTORY STRING REQUIRED)
+    data_type: integer
+        This should either be '21' for profile
+                or            '22' for esweep.
+        NO DEVIATIONS FROM THOSE TWO.
     savename: string [Optional, Default = './Data.csv']
         This should be a directory string that will be used to write
         the DataFrame csv to. (FULL DIRECTORY STRING REQUIRED)
@@ -43,12 +47,20 @@ def init_data(filled, background, savename='./Data.csv', sub=False,
     >>> data = qp.init_data(filled, background, error)
     >>>
     """
+    if (data_type is not 21) and (data_type is not 22):
+        print('Check Data Type Parameter!!!')
+        sys.exit()
+
     #Read in CSV files with Pandas
-    data = pd.read_csv(filled,     header=22)
-    back = pd.read_csv(background, header=22)
+    data = pd.read_csv(filled,     header=data_type)
+    back = pd.read_csv(background, header=data_type)
 
     #Get Standard Deviation of data
-    error = data.groupby([ev, amu]).std()
+    if data_type is 21:
+        error = data.groupby(amu).std()
+
+    if data_type is 22:
+        error = data.groupby([ev, amu]).std()
 
     #Add in Standard Deviation Column
     error     = error.rename(index=str, columns={sem:std})
