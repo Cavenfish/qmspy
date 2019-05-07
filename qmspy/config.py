@@ -39,3 +39,10 @@ def check_data_type(data):
         df = data
 
     return df
+
+def species_of_interest(data):
+    #Grabs only rows with 1 in peaks column
+    temp = data.loc[data[pks] == 1]
+
+    #Returns a list of uniques species of interest (species with data peaks)
+    return temp[amu].unique()
