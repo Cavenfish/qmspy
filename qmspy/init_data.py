@@ -55,17 +55,23 @@ def init_data(filled, background, data_type, savename='./Data.csv', sub=False,
     data = pd.read_csv(filled,     header=data_type)
     back = pd.read_csv(background, header=data_type)
 
-    #Get Standard Deviation of data
+    #Get Standard Deviation and Mean of data and background
     if data_type is 21:
-        error = data.groupby(amu).std()
+        data_error = data.groupby(amu).std()
+        back_error = back.groupby(amu).std()
 
     if data_type is 22:
-        error = data.groupby([ev, amu]).std()
+        data_error = data.groupby([ev, amu]).std()
+        back_error = back.groupby([ev, amu]).std()
 
     #Add in Standard Deviation Column
-    error     = error.rename(index=str, columns={sem:std})
-    error     = error.reset_index()
-    data[std] = error[std]
+    data_error = data_error.rename(index=str, columns={sem:std})
+    data_error = data_error.reset_index()
+    data[std]  = data_error[std]
+
+    back_error = back_error.rename(index=str, columns={sem:std})
+    back_error = back_error.reset_index()
+    back[std]  = back_error[std]
 
     #Removes negative values from data and background
     if abs is True:
