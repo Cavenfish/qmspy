@@ -2,7 +2,7 @@ from .config      import *
 from scipy.signal import find_peaks
 from scipy.signal import gaussian
 
-def fit_gaussians(data):
+def fit_gaussians(data, height, width):
     """
     Fits gaussians to the data peaks.
 
@@ -21,7 +21,7 @@ def fit_gaussians(data):
     df = check_data_type(data)
 
     #find peaks and preperties(widths) in data
-    peaks, properties = find_peaks(df[sem], height=1e-16, width=5)
+    peaks, properties = find_peaks(df[sem], height=height, width=width)
 
     #Add peaks column to DataFrame
     temp        = np.zeros(len(df[sem]))
