@@ -19,8 +19,12 @@ col       =  'Color'
 mar       =  'Marker'
 std       =  'Standard Deviation'
 pks       =  'Peaks'
-gau       =  'Gaussian Fits'
+apk       =  'amu Peak'
+gfx       =  'G-Fits x'
+gfy       =  'G-Fits y'
 
+def gaussian(x, mu, sig, height):
+    return  np.exp(-(x-mu)**2 / (2.*sig**2)) * height
 
 def check_data_type(data):
     #Check if data is in CSV format
