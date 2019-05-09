@@ -1,6 +1,5 @@
 from .config      import *
-from scipy.signal import find_peaks
-from scipy.signal import gaussian
+from scipy.signal import find_peaks, peak_widths
 
 def fit_gaussians(data, height, width):
     """
@@ -22,31 +21,54 @@ def fit_gaussians(data, height, width):
 
     #find peaks and preperties(widths) in data
     peaks, properties = find_peaks(df[sem], height=height, width=width)
+    half_widths       = peak_widths(df[sem], peaks, rel_height=0.5)[0]
+    full_widths       = peak_widths(df[sem], peaks, rel_height=1)[0]
 
     #Add peaks column to DataFrame
     temp        = np.zeros(len(df[sem]))
     temp[peaks] = 1
     df[pks]     = temp
 
-    #initialize some counter and gao==array for gaussian fit values
+    #initialize a counter and DataFrame for gaussian fits
     i   = 0
-    gao = np.zeros(len(df[sem]))
+    a   = []
+    b   = []
+    c   = []
+    gao = pd.DataFrame(columns=[apk,gfx,gfy])
 
-    #interate through peaks
+    #iterate through peaks
     for peak in peaks:
-        left   = int(round(properties['left_ips'][i] ) ) #left point of gaussian
-        right  = int(round(properties['right_ips'][i]) ) #right point of gaussian
-        length = right - left                       #length of gaussian
-        width  = properties['widths'][i]            #gaussian width
+        #start point of gaussian
+        x_left   = int( peak - full_widths[i]/2 )
+        #end point of gaussian
+        x_right  = int( peak + full_widths[i]/2 )
+        #start of gaussian half width
+        width_left = int( peak - half_widths[i]/2 )
+        #right side of gaussian half width
+        width_right = int( peak + half_widths[i]/2 )
+        #gaussian width
+        width  = (df.loc[width_right][amu] - df.loc[width_left][amu])
+        #gaussian height
+        height = df.loc[peak][sem]
+        #gaussian x values
+        x_values = np.linspace(df.loc[x_left][amu],
+                               df.loc[x_right][amu],120)
 
         #generate gaussian curve fit to peak data
-        gaus   = gaussian(length, width) * properties['peak_heights'][i]
+        gaus   = gaussian(x_values, df.loc[peak][amu], width, height)
 
-        #plug generated gaussian into gao array then increment counter
-        gao[left:right] = gaus
+        #plug generated gaussian into temp lists then increment counter
+        a.extend(np.ones(len(x_values)) *df.loc[peak][amu])
+        b.extend(x_values)
+        c.extend(gaus)
         i+=1
 
-    #Add gaussian fits column to dataframe
-    df[gau] = gao
+    #Make DataFrame
+    gao[apk] = a
+    gao[gfx] = b
+    gao[gfy] = c
 
-    return df
+    #Merge DataFrames
+    ret = pd.concat([df,gao], axis=1)
+
+    return ret
