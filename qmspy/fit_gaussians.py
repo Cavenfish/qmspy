@@ -36,12 +36,18 @@ def fit_gaussians(data, height, width):
     c   = []
     gao = pd.DataFrame(columns=[apk,gfx,gfy])
 
+
+#The problem right now is how im storing the Gaussian Fits data
+#Since it is longer than original data, groupby ev does not work
+#can groupby differently but would be best to fix this
+
+
     #iterate through peaks
     for peak in peaks:
         #start point of gaussian
-        x_left   = int( peak - full_widths[i]/2 )
+        x_left   = int( peak - full_widths[i] )
         #end point of gaussian
-        x_right  = int( peak + full_widths[i]/2 )
+        x_right  = int( peak + full_widths[i] + 1)
         #start of gaussian half width
         width_left = int( peak - half_widths[i]/2 )
         #right side of gaussian half width
@@ -50,6 +56,9 @@ def fit_gaussians(data, height, width):
         width  = (df.loc[width_right][amu] - df.loc[width_left][amu])
         #gaussian height
         height = df.loc[peak][sem]
+        #shouldnt need it but i do
+        if x_left < 0:
+            x_left = 0
         #gaussian x values
         x_values = np.linspace(df.loc[x_left][amu],
                                df.loc[x_right][amu],120)
@@ -72,3 +81,4 @@ def fit_gaussians(data, height, width):
     ret = pd.concat([df,gao], axis=1)
 
     return ret
+    
