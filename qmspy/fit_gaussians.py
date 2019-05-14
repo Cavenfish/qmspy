@@ -21,8 +21,8 @@ def fit_gaussians(data, height, width):
 
     #find peaks and preperties(widths) in data
     peaks, properties = find_peaks(df[sem], height=height, width=width)
-    half_widths       = peak_widths(df[sem], peaks, rel_height=0.5)[0]
-    full_widths       = peak_widths(df[sem], peaks, rel_height=1)[0]
+    half_widths       = peak_widths(df[sem], peaks, rel_height=0.5)
+    full_widths       = peak_widths(df[sem], peaks, rel_height=1)
 
     #Add peaks column to DataFrame
     temp        = np.zeros(len(df[sem]))
@@ -45,15 +45,13 @@ def fit_gaussians(data, height, width):
     #iterate through peaks
     for peak in peaks:
         #start point of gaussian
-        x_left   = int( peak - full_widths[i] )
+        x_left   = int(full_widths[2][i])
         #end point of gaussian
-        x_right  = int( peak + full_widths[i] + 1)
-        #start of gaussian half width
-        width_left = int( peak - half_widths[i]/2 )
+        x_right  = int(round(full_widths[3][i]))
         #right side of gaussian half width
-        width_right = int( peak + half_widths[i]/2 )
+        width_right = int(round(half_widths[3][i]))
         #gaussian width
-        width  = (df.loc[width_right][amu] - df.loc[width_left][amu])
+        width  = (df.loc[width_right][amu] - df.loc[peak][amu])
         #gaussian height
         height = df.loc[peak][sem]
         #shouldnt need it but i do
@@ -81,4 +79,3 @@ def fit_gaussians(data, height, width):
     ret = pd.concat([df,gao], axis=1)
 
     return ret
-    
