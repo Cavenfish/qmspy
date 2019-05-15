@@ -41,31 +41,33 @@ def fit_gaussians(data, height, width):
 #Since it is longer than original data, groupby ev does not work
 #can groupby differently but would be best to fix this
 
+    xp = range(len(df))
+    fp = df[amu].tolist()
 
     #iterate through peaks
     for peak in peaks:
-        #start point of gaussian
-        x_left   = int(full_widths[2][i])
-        #end point of gaussian
-        x_right  = int(round(full_widths[3][i]))
+        #start point of gaussian df.loc[x_right][amu]
+        x_left   = np.interp(full_widths[2][i]*0.95, xp, fp)
+        #end point of gaussian df.loc[x_left][amu]
+        x_right  = np.interp(full_widths[3][i]*1.1, xp, fp)
         #right side of gaussian half width
-        width_right = int(round(half_widths[3][i]))
-        #gaussian width
-        width  = (df.loc[width_right][amu] - df.loc[peak][amu])
+        #width_right = int(half_widths[3][i])
+        #gaussian width df.loc[width_right][amu]
+        width  = (np.interp(half_widths[3][i], xp, fp)
+                  - df.loc[peak][amu])
         #gaussian height
         height = df.loc[peak][sem]
         #shouldnt need it but i do
         if x_left < 0:
             x_left = 0
         #gaussian x values
-        x_values = np.linspace(df.loc[x_left][amu],
-                               df.loc[x_right][amu],120)
+        x_values = np.linspace(x_left, x_right, 120)
 
         #generate gaussian curve fit to peak data
         gaus   = gaussian(x_values, df.loc[peak][amu], width, height)
 
         #plug generated gaussian into temp lists then increment counter
-        a.extend(np.ones(len(x_values)) *df.loc[peak][amu])
+        a.extend(np.ones(120) *df.loc[peak][amu])
         b.extend(x_values)
         c.extend(gaus)
         i+=1
