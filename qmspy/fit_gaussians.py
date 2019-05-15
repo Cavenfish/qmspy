@@ -35,7 +35,6 @@ def fit_gaussians(data, height, width):
     c   = []
     gao = pd.DataFrame(columns=[apk,gfx,gfy])
 
-
 #The problem right now is how im storing the Gaussian Fits data
 #Since it is longer than original data, groupby ev does not work
 #can groupby differently but would be best to fix this
