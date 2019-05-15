@@ -29,8 +29,7 @@ def fit_gaussians(data, height, width):
     temp[peaks] = 1
     df[pks]     = temp
 
-    #initialize a counter and DataFrame for gaussian fits
-    i   = 0
+    #initialize DataFrame for gaussian fits
     a   = []
     b   = []
     c   = []
@@ -45,21 +44,27 @@ def fit_gaussians(data, height, width):
     fp = df[amu].tolist()
 
     #iterate through peaks
-    for peak in peaks:
+    for i in range(len(peaks)):
+        #The peak currently being worked on
+        peak = peaks[i]
+
         #start point of gaussian df.loc[x_right][amu]
         x_left   = np.interp(full_widths[2][i]*0.95, xp, fp)
+
         #end point of gaussian df.loc[x_left][amu]
         x_right  = np.interp(full_widths[3][i]*1.1, xp, fp)
-        #right side of gaussian half width
-        #width_right = int(half_widths[3][i])
-        #gaussian width df.loc[width_right][amu]
+
+        #gaussian width
         width  = (np.interp(half_widths[3][i], xp, fp)
                   - df.loc[peak][amu])
+
         #gaussian height
         height = df.loc[peak][sem]
+
         #shouldnt need it but i do
         if x_left < 0:
             x_left = 0
+
         #gaussian x values
         x_values = np.linspace(x_left, x_right, 120)
 
@@ -70,7 +75,6 @@ def fit_gaussians(data, height, width):
         a.extend(np.ones(120) *df.loc[peak][amu])
         b.extend(x_values)
         c.extend(gaus)
-        i+=1
 
     #Make DataFrame
     gao[apk] = a
