@@ -8,7 +8,18 @@ def fit_gaussians(data, height, width,
 
     Parameters
     ----------
-
+    data: string or Pandas DataFrame
+        This should be a string that points to the csv DataFrame file
+        or a Pandas DataFrame. (FULL DIRECTORY STRING REQUIRED)
+    height: float
+        This should be the minimum value for data peak heights that will
+        get a fitting.
+    width: float
+        This should be the minimum value for data peak widths that will
+        get a fitting.
+    savename: string [Optional, Default = './Data-With-Gaussians.csv']
+        This should be a directory string that will be used to write
+        the DataFrame csv to. (FULL DIRECTORY STRING REQUIRED)
 
     Returns
     -------
