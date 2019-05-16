@@ -6,6 +6,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 
+#A standard size for graphs
+size = (10,10)
+
 #Error Header and Tail
 error_head = "\n*****uh oh spaghettios*****\n"
 error_tail = "\n*****Ponder this, then return to me*****\n"
