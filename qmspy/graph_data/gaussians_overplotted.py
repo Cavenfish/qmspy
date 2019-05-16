@@ -20,7 +20,7 @@ def gaussians_overplotted(data, savedir):
 
             temp.plot(gfx, gfy, ax=ax,
                       label=str(temp.iloc[0][apk])+'amu',
-                      linestyle=':')
+                      alpha=0.5)
 
         plt.title('Overplotted Gaussians for '+str(label)+'eV Scan')
         plt.xlabel('Mass amu')
