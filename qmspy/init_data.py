@@ -91,7 +91,7 @@ def init_data(filled, background, data_type, savename='./Data.csv', sub=False,
     data = data.replace(0, np.nan)
     back = back.replace(0, np.nan)
 
-    #Write csv file of data, so this function does not need to be called again
+    #Write csv file of data
     data.to_csv(savename)
 
     return data
