@@ -1,7 +1,8 @@
 from .config      import *
 from scipy.signal import find_peaks, peak_widths
 
-def fit_gaussians(data, height, width):
+def fit_gaussians(data, height, width,
+                  savename='./Data-With-Gaussians.csv'):
     """
     Fits gaussians to the data peaks.
 
@@ -82,5 +83,8 @@ def fit_gaussians(data, height, width):
 
     #Merge DataFrames
     ret = pd.concat([df,gao], axis=1)
+
+    #Write csv file of data
+    data.to_csv(savename)
 
     return ret
