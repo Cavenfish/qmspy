@@ -36,15 +36,15 @@ def fit_gaussians(data, height, width,
     c   = []
     gao = pd.DataFrame(columns=[apk,gfx,gfy])
 
-#The problem right now is how im storing the Gaussian Fits data
-#Since it is longer than original data, groupby ev does not work
-#can groupby differently but would be best to fix this
-
-    xp = range(len(df))
-    fp = df[amu].tolist()
+    #Arrays for interpolations
+    fp = df[amu].unique().tolist()
+    xp = range(len(fp))
 
     #iterate through peaks
     for i in range(len(peaks)):
+        if (df.loc[peaks[i]][amu] < df.loc[peaks[i-1]][amu]) and (i is not 0):
+            xp = range(max(xp)+1, max(xp)+1+len(xp))
+
         #The peak currently being worked on
         peak = peaks[i]
 
@@ -85,6 +85,6 @@ def fit_gaussians(data, height, width,
     ret = pd.concat([df,gao], axis=1)
 
     #Write csv file of data
-    data.to_csv(savename)
+    ret.to_csv(savename)
 
     return ret
