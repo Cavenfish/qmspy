@@ -59,19 +59,14 @@ def fit_gaussians(data, height, width,
         #The peak currently being worked on
         peak = peaks[i]
 
-        #start point of gaussian df.loc[x_right][amu]
-        x_left   = np.interp(full_widths[2][i]*0.95, xp, fp)
-
-#-->>   These left and right point need some work, larger data peaks are
-#-->>   Getting too little point for the actual gaussian making them look
-#-->>   Bad, maybe should try not using multiplication
-
-        #end point of gaussian df.loc[x_left][amu]
-        x_right  = np.interp(full_widths[3][i]*1.1, xp, fp)
-
         #gaussian width
-        width  = (np.interp(half_widths[3][i], xp, fp)
-                  - df.loc[peak][amu])
+        width  = (np.interp(half_widths[3][i], xp, fp) - df.loc[peak][amu])
+
+        #start point of gaussian
+        x_left   = df.loc[peak][amu] - 3.5*width
+
+        #end point of gaussian 
+        x_right  = df.loc[peak][amu] + 3.5*width
 
         #gaussian height
         height = df.loc[peak][sem]
