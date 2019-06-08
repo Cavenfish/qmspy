@@ -38,14 +38,13 @@ def appearance_energy(data):
         #equal to the specie of interest
         temp = df.loc[df[amu] == specie]
 
-        #Perform a polynomial fitting to the entire data-set
-        z = np.polyfit(temp[ev], temp[sem], 6)
-        f = np.poly1d(z) #this is the fitting function
+        #Perform a levenberg marquet method power law fitting to the data-set
+        popt, pcov = curve_fit(p_law, temp[ev], temp[sem], method='lm')
 
-        #x-range to later interpolate the x-intercept
-        x = np.arange(8,20)
+        #Fitted data
+        fit = p_law(temp[ev], *popt)
 
         #interpolate the x-intercept and add it to the dictionary
-        energies[specie] = np.interp(0, f(x), x)
+        energies[specie] = np.interp(0, temp[ev], fit)
 
     return energies
