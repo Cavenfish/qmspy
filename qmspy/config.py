@@ -29,6 +29,9 @@ gfy       =  'G-Fits y'
 def gaussian(x, mu, sig, height):
     return  np.exp(-(x-mu)**2 / (2.*sig**2)) * height
 
+def p_law(x, A, E, p):
+    return A*(E - x)**p
+
 def check_data_type(data):
     #Check if data is in CSV format
     if '.csv' in data:
