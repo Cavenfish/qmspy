@@ -1,7 +1,7 @@
 from .config import *
 from scipy.optimize import curve_fit
 
-def appearance_energy(data):
+def appearance_energy(data, savedir=None):
     """
     This function finds the appearance energy of all amu species present in
     the data by means of linear fit.
@@ -38,13 +38,26 @@ def appearance_energy(data):
         #equal to the specie of interest
         temp = df.loc[df[amu] == specie]
 
+        x = temp[ev].values
+        y = temp[sem].values
+        #y += np.abs(min(y))
+
         #Perform a levenberg marquet method power law fitting to the data-set
-        popt, pcov = curve_fit(p_law, temp[ev], temp[sem], method='lm')
+        popt, pcov = curve_fit(p_law, x, y, method='lm', maxfev=2000000)
 
         #Fitted data
-        fit = p_law(temp[ev], *popt)
+        fit = p_law(x, *popt)
+
+        if savedir is not None:
+            s = 'AE = ' +str(popt[0]) + '\np = ' + str(popt[1])
+            plt.plot(x,y,'.', label='Data')
+            plt.plot(x,fit, label='Wanier Fitting')
+            plt.text(12, 0.7*max(y), s)
+            plt.title(specie)
+            plt.savefig(savedir + str(specie) + '.png')
+            plt.close()
 
         #interpolate the x-intercept and add it to the dictionary
-        energies[specie] = np.interp(0, temp[ev], fit)
+        energies[specie] = popt[0:2]
 
     return energies
