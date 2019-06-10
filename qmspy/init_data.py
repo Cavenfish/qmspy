@@ -88,8 +88,8 @@ def init_data(filled, background, data_type, savename='./Data.csv', sub=False,
         data[sem] -= back[sem]
 
     #Make all 0s np.nan (prevents them from being plotted)
-    data = data.replace(0, np.nan)
-    back = back.replace(0, np.nan)
+    #data = data.replace(0, np.nan)
+    #back = back.replace(0, np.nan)
 
     #Write csv file of data
     data.to_csv(savename)
