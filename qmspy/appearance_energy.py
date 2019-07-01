@@ -38,20 +38,23 @@ def appearance_energy(data, savedir=None):
         #equal to the specie of interest
         temp = df.loc[df[amu] == specie]
 
-        x = temp[ev].values
-        y = temp[sem].values
-        #y += np.abs(min(y))
+        x   = temp[ev].values
+        y   = temp[sem].values
+        a,b = x[y>0],y[y>0]
+        a,b = a[0:8],b[0:8]
+
+        if len(a) < 4:
+            continue 
 
         #Perform a levenberg marquet method power law fitting to the data-set
-        popt, pcov = curve_fit(p_law, x, y, method='lm', maxfev=2000000)
-
+        popt, pcov = curve_fit(p_law, a, b, method='lm', maxfev=2000000000)
         #Fitted data
-        fit = p_law(x, *popt)
+        fit = p_law(x[x<max(a)], *popt)
 
         if savedir is not None:
             s = 'AE = ' +str(popt[0]) + '\np = ' + str(popt[1])
             plt.plot(x,y,'.', label='Data')
-            plt.plot(x,fit, label='Wanier Fitting')
+            plt.plot(x[x<max(a)],fit, label='Wanier Fitting')
             plt.text(12, 0.7*max(y), s)
             plt.title(specie)
             plt.savefig(savedir + str(specie) + '.png')
