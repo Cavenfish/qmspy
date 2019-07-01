@@ -1,7 +1,7 @@
 from .config import *
 
 def init_data(filled, background, data_type, savename='./Data.csv', sub=False,
-              abs=False, drop=True):
+              drop=True):
     """
     This function reads in the QMS csv files and forms pandas DataFrames,
     it also preps the data.
@@ -73,10 +73,9 @@ def init_data(filled, background, data_type, savename='./Data.csv', sub=False,
     back_error = back_error.reset_index()
     back[std]  = back_error[std]
 
-    #Removes negative values from data and background
-    if abs is True:
-        data.update( data[sem].abs() )
-        back.update( back[sem].abs() )
+    #Removes noise from Data and Background SEM Amps
+    data.update(data[sem].where(data[sem] > 0).fillna(0))
+    back.update(back[sem].where(back[sem] > 0).fillna(0))
 
     #Drops data outside of first cycle
     if drop is True:
