@@ -1,7 +1,9 @@
 from .config      import *
 from scipy.signal import find_peaks, peak_widths
+from scipy.optimize import curve_fit
+import matplotlib.animation as ani
 
-def fit_gaussians(data, height, width,
+def fit_gaussians(data, height, width, savedir='./', overplot=False,
                   savename='./Data-With-Gaussians.csv'):
     """
     Fits gaussians to the data peaks.
@@ -31,70 +33,68 @@ def fit_gaussians(data, height, width,
     """
     df = check_data_type(data)
 
-    #find peaks and preperties(widths) in data
-    peaks, properties = find_peaks(df[sem], height=height, width=width)
-    half_widths       = peak_widths(df[sem], peaks, rel_height=0.5)
-    full_widths       = peak_widths(df[sem], peaks, rel_height=1)
+    #Initialize new columns
+    df[pks] = np.nan
+    df[gfs] = np.nan
 
-    #Add peaks column to DataFrame
-    temp        = np.zeros(len(df[sem]))
-    temp[peaks] = 1
-    df[pks]     = temp
+    for label, subDF in df.groupby(ev):
+        subDF = subDF.reset_index()
 
-    #initialize DataFrame for gaussian fits
-    a   = []
-    b   = []
-    c   = []
-    gao = pd.DataFrame(columns=[apk,gfx,gfy])
+        #find peaks and preperties(widths) in data
+        peaks, properties = find_peaks(subDF[sem], height=height, width=width,
+                                       distance=10)
+        half_widths       = peak_widths(subDF[sem], peaks, rel_height=0.5)
+        full_widths       = peak_widths(subDF[sem], peaks, rel_height=1)
 
-    #Arrays for interpolations
-    fp = df[amu].unique().tolist()
-    xp = range(len(fp))
+        #Add peaks column to DataFrame
+        temp        = np.zeros(len(subDF[sem]))
+        temp[peaks] = 1
+        subDF[pks]  = temp
 
-    #iterate through peaks
-    for i in range(len(peaks)):
-        if (df.loc[peaks[i]][amu] < df.loc[peaks[i-1]][amu]) and (i is not 0):
-            xp = range(max(xp)+1, max(xp)+1+len(xp))
+        #Iterate trough peak indexes
+        for peak in peaks:
+            #Get min and max index of subDataFrame
+            imin, imax = subDF.index[0], subDF.index[-1]
 
-        #The peak currently being worked on
-        peak = peaks[i]
+            #Make sure a&b are within subDataFrame index
+            a = peak-10
+            b = peak+10
+            if a < imin:
+                a = imin
+            if b > imax:
+                b = imax
 
-        #gaussian width
-        width  = (np.interp(half_widths[3][i], xp, fp) - df.loc[peak][amu])
+            #Slice x,y region for gaussian fitting
+            x = subDF[amu].iloc[a:b].values
+            y = subDF[sem].iloc[a:b].values
 
-        #start point of gaussian
-        x_left   = df.loc[peak][amu] - 3.5*width
+            #Fit Gaussian, then get sum
+            mu0        = subDF[amu].iloc[peak]
+            h0         = subDF[sem].iloc[peak]
+            p0         = [mu0, 1, h0]
+            popt, pcov = curve_fit(gaussian, x, y,p0=p0, maxfev=2000000000)
+            gfitx      = np.arange(min(x), max(x), 0.001)
+            gfity      = gaussian(gfitx, *popt)
+            area       = popt[2]*popt[1]*np.sqrt(2.*np.pi)
 
-        #end point of gaussian 
-        x_right  = df.loc[peak][amu] + 3.5*width
+            #Replace 1's in temp with sums
+            temp[peak] = area
 
-        #gaussian height
-        height = df.loc[peak][sem]
+            #Make graph for this overplot
+            if overplot is True:
+                plt.plot(x,y, '.')
+                plt.plot(gfitx,gfity,'--')
+                plt.savefig(savedir+str(label)+'--'+str(mu0)+'.png')
+                plt.close()
 
-        #shouldnt need it but i do
-        if x_left < 0:
-            x_left = 0
+        #Add Gaussian integrations into Dataframe
+        subDF[gfs] = temp
 
-        #gaussian x values
-        x_values = np.linspace(x_left, x_right, 120)
-
-        #generate gaussian curve fit to peak data
-        gaus   = gaussian(x_values, df.loc[peak][amu], width, height)
-
-        #plug generated gaussian into temp lists then increment counter
-        a.extend(np.ones(120) *df.loc[peak][amu])
-        b.extend(x_values)
-        c.extend(gaus)
-
-    #Make DataFrame
-    gao[apk] = a
-    gao[gfx] = b
-    gao[gfy] = c
-
-    #Merge DataFrames
-    ret = pd.concat([df,gao], axis=1)
+        #Update main DataFrame with sub-DataFrame
+        df[pks].update(subDF[pks])
+        df[gfs].update(subDF[gfs])
 
     #Write csv file of data
-    ret.to_csv(savename)
+    df.to_csv(savename)
 
-    return ret
+    return df
