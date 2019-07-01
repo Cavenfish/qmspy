@@ -22,9 +22,7 @@ col       =  'Color'
 mar       =  'Marker'
 std       =  'Standard Deviation'
 pks       =  'Peaks'
-apk       =  'amu Peak'
-gfx       =  'G-Fits x'
-gfy       =  'G-Fits y'
+gfs       =  'G-Fit Sums'
 
 def gaussian(x, mu, sig, height):
     return  np.exp(-(x-mu)**2 / (2.*sig**2)) * height
