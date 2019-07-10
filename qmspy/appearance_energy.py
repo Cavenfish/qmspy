@@ -38,23 +38,35 @@ def appearance_energy(data, savedir=None):
         #equal to the specie of interest
         temp = df.loc[df[amu] == specie]
 
-        x   = temp[ev].values
-        y   = temp[sem].values
-        a,b = x[y>0],y[y>0]
-        a,b = a[0:8],b[0:8]
+        x    = temp[ev].values
+        y0    = temp[sem].values
+        a0,b0 = x[y0>0],y0[y0>0]
 
-        if len(a) < 4:
-            continue 
+        y1    = temp[gfs].values
+        a1,b1 = x[y1>0],y1[y1>0]
+
+
+        if len(a0) < 4:
+            continue
 
         #Perform a levenberg marquet method power law fitting to the data-set
-        popt, pcov = curve_fit(p_law, a, b, method='lm', maxfev=2000000000)
+        popt, pcov = curve_fit(p_law, a0, b0, method='lm', maxfev=2000000000)
         #Fitted data
-        fit = p_law(x[x<max(a)], *popt)
+        fit0 = p_law(x, *popt)
+
+        if len(a1) < 4:
+            fit1 = 0
+        else:
+            #Perform a levenberg marquet method power law fitting to the data-set
+            popt, pcov = curve_fit(p_law, a1, b1, method='lm', maxfev=2000000000)
+            #Fitted data
+            fit1 = p_law(x, *popt)
 
         if savedir is not None:
             s = 'AE = ' +str(popt[0]) + '\np = ' + str(popt[1])
             plt.plot(x,y,'.', label='Data')
-            plt.plot(x[x<max(a)],fit, label='Wanier Fitting')
+            plt.plot(x, fit0, label='Wanier Fitting of Data')
+            plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
             plt.text(12, 0.7*max(y), s)
             plt.title(specie)
             plt.savefig(savedir + str(specie) + '.png')
