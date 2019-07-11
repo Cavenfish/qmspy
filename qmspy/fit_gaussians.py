@@ -51,41 +51,34 @@ def fit_gaussians(data, height, width, savedir='./', overplot=False,
         temp[peaks] = 1
         subDF[pks]  = temp
 
-        #Iterate trough peak indexes
+        p0 = []
         for peak in peaks:
-            #Get min and max index of subDataFrame
-            imin, imax = subDF.index[0], subDF.index[-1]
+            p0.append(subDF[amu].iloc[peak])
+            p0.append(1)
+            p0.append(subDF[sem].iloc[peak])
 
-            #Make sure a&b are within subDataFrame index
-            a = peak-10
-            b = peak+10
-            if a < imin:
-                a = imin
-            if b > imax:
-                b = imax
+        if not p0:
+            continue
 
-            #Slice x,y region for gaussian fitting
-            x = subDF[amu].iloc[a:b].values
-            y = subDF[sem].iloc[a:b].values
+        x          = subDF[amu].values
+        y          = subDF[sem].values
+        popt, pcov = curve_fit(gaussian_fit, x, y, p0, maxfev=2000000000)
+        gfit       = gaussian_fit(subDF[amu], *popt)
 
-            #Fit Gaussian, then get sum
-            mu0        = subDF[amu].iloc[peak]
-            h0         = subDF[sem].iloc[peak]
-            p0         = [mu0, 1, h0]
-            popt, pcov = curve_fit(gaussian, x, y,p0=p0, maxfev=2000000000)
-            gfitx      = np.arange(min(x), max(x), 0.001)
-            gfity      = gaussian(gfitx, *popt)
-            area       = popt[2]*popt[1]*np.sqrt(2.*np.pi)
+        for i in range(0, len(popt), 3):
+            mu   = popt[i]
+            sig  = popt[i+1]
+            amp  = popt[i+2]
+            area = amp * sig * np.sqrt(2.*np.pi)
+            j    = int(i/3)
+            temp[peaks[j]] = area
 
-            #Replace 1's in temp with sums
-            temp[peak] = area
+        if overplot is True:
+            plt.plot(subDF[amu],subDF[sem], '.')
+            plt.plot(subDF[amu],gfit,'--')
+            plt.savefig(savedir+str(label)+'.png')
+            plt.close()
 
-            #Make graph for this overplot
-            if overplot is True:
-                plt.plot(x,y, '.')
-                plt.plot(gfitx,gfity,'--')
-                plt.savefig(savedir+str(label)+'--'+str(mu0)+'.png')
-                plt.close()
 
         #Add Gaussian integrations into Dataframe
         subDF[gfs] = temp
