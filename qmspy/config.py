@@ -28,7 +28,7 @@ def gaussian(x, mu, sig, height):
     return  np.exp(-(x-mu)**2 / (2.*sig**2)) * height
 
 def gaussian_fit(x, *params):
-    y = np.zeros_like(x)
+    y = np.zeros_like(x).astype(np.float64)
     for i in range(0, len(params), 3):
         mu     = params[i]
         sig    = params[i+1]
@@ -37,7 +37,8 @@ def gaussian_fit(x, *params):
     return y
 
 def p_law(x, AE, p, a):
-    y = np.piecewise(x, [x < AE, x >= AE], [lambda x: 0, lambda x: a*(x - AE)**p])
+    y = np.piecewise(x, [x < AE, x >= AE],
+                     [lambda x: 0, lambda x: a*(x - AE)**p])
     return y
 
 def check_data_type(data):
