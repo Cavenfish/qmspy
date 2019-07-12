@@ -64,10 +64,11 @@ def appearance_energy(data, savedir=None):
 
         if savedir is not None:
             s = 'AE = ' +str(popt[0]) + '\np = ' + str(popt[1])
-            plt.plot(x,y,'.', label='Data')
+            plt.plot(x,y0,'.', label='Data')
+            plt.plot(x,y1,'.', label='Gaussian Sums')
             plt.plot(x, fit0, label='Wanier Fitting of Data')
             plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
-            plt.text(12, 0.7*max(y), s)
+            plt.text(12, 0.7*max(y0), s)
             plt.title(specie)
             plt.savefig(savedir + str(specie) + '.png')
             plt.close()
