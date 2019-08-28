@@ -42,8 +42,8 @@ def appearance_energy(data, savedir=None):
         y0    = temp[sem].values
         a0,b0 = x[y0>0],y0[y0>0]
 
-        y1    = temp[gfs].values
-        a1,b1 = x[y1>0],y1[y1>0]
+        #y1    = temp[gfs].values
+        #a1,b1 = x[y1>0],y1[y1>0]
 
 
         if len(a0) < 4:
@@ -54,20 +54,21 @@ def appearance_energy(data, savedir=None):
         #Fitted data
         fit0 = p_law(x, *popt)
 
-        if len(a1) < 4:
-            fit1 = 0
-        else:
+        #if len(a1) < 4:
+            #fit1 = np.zeros_like(x)
+        #else:
             #Perform a levenberg marquet method power law fitting to the data-set
-            popt, pcov = curve_fit(p_law, a1, b1, method='lm', maxfev=2000000000)
+            #popt, pcov = curve_fit(p_law, a1, b1, method='lm', maxfev=2000000000)
             #Fitted data
-            fit1 = p_law(x, *popt)
+            #fit1 = p_law(x, *popt)
+
 
         if savedir is not None:
             s = 'AE = ' +str(popt[0]) + '\np = ' + str(popt[1])
             plt.plot(x,y0,'.', label='Data')
-            plt.plot(x,y1,'.', label='Gaussian Sums')
+            #plt.plot(x,y1,'.', label='Gaussian Sums')
             plt.plot(x, fit0, label='Wanier Fitting of Data')
-            plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
+            #plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
             plt.text(12, 0.7*max(y0), s)
             plt.title(specie)
             plt.savefig(savedir + str(specie) + '.png')
