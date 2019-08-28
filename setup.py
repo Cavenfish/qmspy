@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="qmspy",
-    version="0.0.1",
+    version="0.0.2",
     author="Brian C. Ferrari",
     author_email="brianf1996@knights.ucf.edu",
     description="This is a python module for analysing and graphing QMS data.",
@@ -13,6 +13,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Cavenfish/qmspy",
     packages=setuptools.find_packages(),
+    install_requires=["numpy", "scipy", "pandas", "seaborn",
+                      "openpyxl", "matplotlib"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
