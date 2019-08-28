@@ -83,6 +83,8 @@ def fit_gaussians(data, height, width, savedir='./', overplot=False,
         #Add Gaussian integrations into Dataframe
         subDF[gfs] = temp
 
+        #DELETE THIS LINE
+
         #Update main DataFrame with sub-DataFrame
         df[pks].update(subDF[pks])
         df[gfs].update(subDF[gfs])
