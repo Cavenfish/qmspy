@@ -64,7 +64,9 @@ def appearance_energy(data, savedir=None):
 
 
         if savedir is not None:
-            s = 'AE = ' +str(popt[0]) + '\np = ' + str(popt[1])
+            ae = str(round(popt[0],2))
+            p  = str(round(popt[1],2))
+            s  = 'AE = ' + ae + '\np = ' + p
             plt.plot(x,y0,'.', label='Data')
             #plt.plot(x,y1,'.', label='Gaussian Sums')
             plt.plot(x, fit0, label='Wanier Fitting of Data')
