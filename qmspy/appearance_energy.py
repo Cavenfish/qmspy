@@ -40,7 +40,7 @@ def appearance_energy(data, savedir=None):
 
         x    = temp[ev].values
         y    = temp[sem].values
-        a,b = x[y0>0],y0[y0>0]
+        a,b = x[y>0],y[y>0]
 
         if len(a0) < 4:
             continue
@@ -82,7 +82,7 @@ def appearance_energy(data, savedir=None):
             #plt.plot(x,y1,'.', label='Gaussian Sums')
             plt.plot(x, fit0, label='Wanier Fitting of Data')
             #plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
-            plt.text(12, 0.7*max(y0), s)
+            plt.text(12, 0.7*max(y), s)
             plt.title(specie)
             plt.savefig(savedir + str(specie) + '.png')
             plt.close()
