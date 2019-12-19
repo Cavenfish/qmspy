@@ -39,35 +39,46 @@ def appearance_energy(data, savedir=None):
         temp = df.loc[df[amu] == specie]
 
         x    = temp[ev].values
-        y0    = temp[sem].values
-        a0,b0 = x[y0>0],y0[y0>0]
-
-        #y1    = temp[gfs].values
-        #a1,b1 = x[y1>0],y1[y1>0]
-
+        y    = temp[sem].values
+        a,b = x[y0>0],y0[y0>0]
 
         if len(a0) < 4:
             continue
 
-        #Perform a levenberg marquet method power law fitting to the data-set
-        popt, pcov = curve_fit(p_law, a0, b0, method='lm', maxfev=2000000000)
+        past = 1e20
+        for i in range(len(a) - 4):
+            a0 = a[0:len(a)-i]
+            b0 = b[0:len(b)-i]
+
+            #Perform a levenberg marquet method power law
+            #fitting to the data-set
+            popt, pcov = curve_fit(p_law, a0, b0, method='lm',
+                                   maxfev=2000000000)
+
+            #Get residuals of data - fitting
+            now = np.linalg.norm( y - p_law(x, *popt) )
+
+            #Check if this is the best fit
+            if now < past:
+                j = i
+
+            past = now
+
+        #Perform a levenberg marquet method power law
+        #fitting to the data-set
+        a0 = a[0:len(a)-j]
+        b0 = b[0:len(b)-j]
+        popt, pcov = curve_fit(p_law, a0, b0, method='lm',
+                               maxfev=2000000000)
+
         #Fitted data
         fit0 = p_law(x, *popt)
-
-        #if len(a1) < 4:
-            #fit1 = np.zeros_like(x)
-        #else:
-            #Perform a levenberg marquet method power law fitting to the data-set
-            #popt, pcov = curve_fit(p_law, a1, b1, method='lm', maxfev=2000000000)
-            #Fitted data
-            #fit1 = p_law(x, *popt)
-
 
         if savedir is not None:
             ae = str(round(popt[0],2))
             p  = str(round(popt[1],2))
             s  = 'AE = ' + ae + '\np = ' + p
-            plt.plot(x,y0,'.', label='Data')
+            plt.plot(x,y,'.', label='Data')
             #plt.plot(x,y1,'.', label='Gaussian Sums')
             plt.plot(x, fit0, label='Wanier Fitting of Data')
             #plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
