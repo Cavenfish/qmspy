@@ -42,7 +42,7 @@ def appearance_energy(data, savedir=None):
         y    = temp[sem].values
         a,b = x[y>0],y[y>0]
 
-        if len(a0) < 4:
+        if len(a) < 4:
             continue
 
         past = 1e20
