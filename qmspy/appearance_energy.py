@@ -45,33 +45,9 @@ def appearance_energy(data, savedir=None):
         if len(a) < 4:
             continue
 
-        past = 1e20
-        for i in range(len(a) - 4):
-            a0 = a[0:len(a)-i]
-            b0 = b[0:len(b)-i]
-
-            #Perform a levenberg marquet method power law
-            #fitting to the data-set
-            popt, pcov = curve_fit(p_law, a0, b0, method='lm',
-                                   maxfev=2000000000)
-
-            #get index of max fitting x-value
-            k = np.where(x == max(a0))[0][0]
-
-            #Get residuals of data - fitting
-            now = np.linalg.norm( y[0:k] - p_law(x[0:k], *popt) )
-
-            #Check if this is the best fit
-            if now < past:
-                j = i
-
-            past = now
-
         #Perform a levenberg marquet method power law
         #fitting to the data-set
-        a0 = a[0:len(a)-j]
-        b0 = b[0:len(b)-j]
-        popt, pcov = curve_fit(p_law, a0, b0, method='lm',
+        popt, pcov = curve_fit(p_law, a, b, method='lm',
                                maxfev=2000000000)
 
         #Fitted data
