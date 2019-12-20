@@ -55,8 +55,11 @@ def appearance_energy(data, savedir=None):
             popt, pcov = curve_fit(p_law, a0, b0, method='lm',
                                    maxfev=2000000000)
 
+            #get index of max fitting x-value
+            k = x.index(max(b0))
+
             #Get residuals of data - fitting
-            now = np.linalg.norm( y - p_law(x, *popt) )
+            now = np.linalg.norm( y[0:k] - p_law(x[0:k], *popt) )
 
             #Check if this is the best fit
             if now < past:
