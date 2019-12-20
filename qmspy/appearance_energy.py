@@ -57,8 +57,6 @@ def appearance_energy(data, savedir=None):
 
             #get index of max fitting x-value
             k = np.where(x == max(a0))[0][0]
-            print(max(a0))
-            print(k)
 
             #Get residuals of data - fitting
             now = np.linalg.norm( y[0:k] - p_law(x[0:k], *popt) )
