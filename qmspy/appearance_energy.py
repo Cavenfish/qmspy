@@ -42,28 +42,41 @@ def appearance_energy(data, savedir=None):
         y    = temp[sem].values
         a,b = x[y>0],y[y>0]
 
-        if len(a) < 4:
-            continue
 
         #Perform a levenberg marquet method power law
         #fitting to the data-set
-        popt, pcov = curve_fit(p_law, a, b, method='lm',
-                               maxfev=2000000000)
+        popt, pcov   = curve_fit(p_law, x, y, method='lm',
+                                 maxfev=2000000000)
+        p0           = (1, popt[0], 1, popt[1], popt[2], popt[2])
+        popt2, pcov2 = curve_fit(p_law2, x, y, p0=p0, method='lm',
+                                 maxfev=2000000000)
 
         #Fitted data
-        fit0 = p_law(x, *popt)
+        fit  =  p_law(x, *popt)
+        fit2 = p_law2(x, *popt2)
 
         if savedir is not None:
             ae = str(round(popt[0],2))
             p  = str(round(popt[1],2))
             s  = 'AE = ' + ae + '\np = ' + p
             plt.plot(x,y,'.', label='Data')
-            #plt.plot(x,y1,'.', label='Gaussian Sums')
-            plt.plot(x, fit0, label='Wanier Fitting of Data')
-            #plt.plot(x, fit1, label='Wanier Fitting of Gaussian Sums')
+            plt.plot(x, fit, label='Wanier Fitting of Data')
             plt.text(12, 0.7*max(y), s)
             plt.title(specie)
             plt.savefig(savedir + str(specie) + '.png')
+            plt.close()
+
+            ae1 = str(round(popt2[0],2))
+            ae2 = str(round(popt2[1],2))
+            p1  = str(round(popt2[2],2))
+            p2  = str(round(popt2[3],2))
+            s  = ('AE1 = ' + ae1 + '\nAE2 = ' + ae2 +
+                  '\np1 = ' + p1 + '\np2 = ' + p2)
+            plt.plot(x,y,'.', label='Data')
+            plt.plot(x, fit2, label='Wanier Fitting of Data')
+            plt.text(12, 0.7*max(y), s)
+            plt.title(specie)
+            plt.savefig(savedir + str(specie) + '--fit2.png')
             plt.close()
 
         #interpolate the x-intercept and add it to the dictionary

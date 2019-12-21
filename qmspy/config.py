@@ -41,6 +41,11 @@ def p_law(x, AE, p, a):
                     [lambda x: 0, lambda x: a*(x - AE)**p])
     return y
 
+def p_law2(x, AE1, AE2, p1, p2, a, b):
+    y = np.piecewise(x, [x < AE1, (AE1 < x) & (x < AE2), AE2 <= x],
+                    [lambda x: 0, lambda x: a*(x - AE1)**p1,
+                     lambda x: a*(x-AE1)**p1 + b*(x-AE2)**p2])
+    return y
 
 def check_data_type(data):
     #Check if data is in CSV format
